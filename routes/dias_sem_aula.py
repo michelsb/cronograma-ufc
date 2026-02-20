@@ -55,7 +55,7 @@ def cadastrar_dia_sem_aula(request: Request,
         recalcular_aulas_por_data(session, data_convertida)
 
     return RedirectResponse(
-        url=request.url_for("dias-sem-aula") + "?sucesso=Dia+sem+aula+adicionado",
+        url=f"{request.url_for('dias-sem-aula')}?sucesso=Dia+sem+aula+adicionado",
         status_code=303
     )
 
