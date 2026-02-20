@@ -256,8 +256,8 @@ def gerar_aulas_para_disciplina(session: Session, disciplina: Disciplina) -> Non
     }
 
     # 4. Converter período da disciplina (strings) para date
-    inicio = date.fromisoformat(disciplina.periodo_inicio)
-    fim = date.fromisoformat(disciplina.periodo_fim)
+    inicio = disciplina.periodo_inicio
+    fim = disciplina.periodo_fim
 
     # Mapa de nome do dia -> weekday() do Python
     dia_map = {
