@@ -32,6 +32,7 @@ services:
       ADMIN_SENHA: ${ADMIN_SENHA}
       ADMIN_PAPEL: ${ADMIN_PAPEL}
       SECRET_KEY: ${SECRET_KEY}
+      ROOT_PATH: ${ROOT_PATH}
     ports:
       - "8000:8000"
     depends_on:
