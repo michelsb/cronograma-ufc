@@ -18,26 +18,9 @@ def startup():
     init_db()  # Cria as tabelas
     criar_usuario_inicial()  # Cria o usuário admin se não existir
 
-@app.get("/health", tags=["health"])
-def health():
-    """
-    Endpoint de healthcheck que verifica a conexão com o banco de dados.
-    
-    Usado pelo Docker para determinar se o container está saudável.
-    """
-    try:
-        # Tenta acessar o banco de dados
-        with get_session() as session:
-            session.exec("SELECT 1")
-        return JSONResponse(
-            status_code=200,
-            content={"status": "healthy", "message": "Application and database are OK"}
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=503,
-            content={"status": "unhealthy", "message": f"Database error: {str(e)}"}
-        )
+@app.get("/health") 
+def health(): 
+    return {"status": "ok"}
 
 # ROTAS PÚBLICAS
 app.include_router(auth.router)  # login/logout
