@@ -47,7 +47,7 @@ def login(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=False,  # coloque True em produção com HTTPS
+        secure=True,  # coloque True em produção com HTTPS
         samesite="lax",
     )
     return response
