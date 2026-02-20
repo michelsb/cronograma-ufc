@@ -1,5 +1,5 @@
 import os
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
@@ -23,6 +23,10 @@ def startup():
 @app.get("/health") 
 def health(): 
     return {"status": "ok"}
+
+@app.get("/debug") 
+def debug(request: Request): 
+    return dict(request.headers)
 
 # ROTAS PÚBLICAS
 app.include_router(auth.router)  # login/logout
