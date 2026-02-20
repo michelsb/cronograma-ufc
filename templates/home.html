@@ -14,7 +14,7 @@
                 <h5 class="card-title">📚 Disciplinas</h5>
                 <p class="display-6">{{ total_disciplinas }}</p>
                 <p class="text-muted">Cadastradas no sistema</p>
-                <a href="/disciplinas" class="btn btn-primary">Ver disciplinas</a>
+                <a href="{{ request.url_for('disciplinas') }}" class="btn btn-primary">Ver disciplinas</a>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
                 <h5 class="card-title">📝 Aulas geradas</h5>
                 <p class="display-6">{{ total_aulas }}</p>
                 <p class="text-muted">Aulas no semestre</p>
-                <a href="/disciplinas" class="btn btn-primary">Ver aulas</a>
+                <a href="{{ request.url_for('disciplinas') }}" class="btn btn-primary">Ver aulas</a>
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@
                 <h5 class="card-title">📅 Dias sem aula</h5>
                 <p class="display-6">{{ total_dias_sem_aula }}</p>
                 <p class="text-muted">Feriados e recessos</p>
-                <a href="/dias-sem-aula" class="btn btn-primary">Gerenciar</a>
+                <a href="{{ request.url_for('dias-sem-aula') }}" class="btn btn-primary">Gerenciar</a>
             </div>
         </div>
     </div>

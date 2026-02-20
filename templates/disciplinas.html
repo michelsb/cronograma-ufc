@@ -6,7 +6,7 @@
 <h1 class="mb-4">Disciplinas</h1>
 
 <!-- Filtro de semestre -->
-<form method="get" action="/disciplinas" class="mb-4">
+<form method="get" action="{{ request.url_for('disciplinas') }}" class="mb-4">
     <div class="row g-2 align-items-end">
         <div class="col-auto">
             <label class="form-label">Semestre</label>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="col-auto">
-            <a href="/importar-texto" class="btn btn-primary mt-4">Importar Grade</a>
+            <a href="{{ request.url_for('importar-texto') }}" class="btn btn-primary mt-4">Importar Grade</a>
         </div>
     </div>
 </form>
@@ -55,19 +55,19 @@
             </td>
 
             <td>
-                <a href="/disciplinas/{{ d.id }}/dashboard" class="btn btn-sm btn-info mb-1">
+                <a href="{{ request.url_for('disciplinas/{disciplina_id}/dashboard', disciplina_id=d.id) }}" class="btn btn-sm btn-info mb-1">
                     Dashboard
                 </a>
 
-                <a href="/disciplinas/{{ d.id }}/aulas" class="btn btn-sm btn-secondary mb-1">
+                <a href="{{ request.url_for('disciplinas/{disciplina_id}/aulas', disciplina_id=d.id) }}" class="btn btn-sm btn-secondary mb-1">
                     Ver Aulas
                 </a>
 
-                <a href="/disciplinas/{{ d.id }}/editar" class="btn btn-sm btn-warning mb-1">
+                <a href="{{ request.url_for('disciplinas/{disciplina_id}/editar', disciplina_id=d.id) }}" class="btn btn-sm btn-warning mb-1">
                     Editar
                 </a>
 
-                <form action="/disciplinas/{{ d.id }}/remover" method="post"
+                <form action="{{ request.url_for('disciplinas/{disciplina_id}/remover', disciplina_id=d.id) }}" method="post"
                     onsubmit="return confirm('Tem certeza que deseja remover esta disciplina e TODAS as aulas dela?')">
                     <button class="btn btn-danger btn-sm">Remover</button>
                 </form>

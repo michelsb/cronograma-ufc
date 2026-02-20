@@ -5,7 +5,7 @@
 
 <h1 class="mb-4">Dias sem Aula</h1>
 
-<form method="post" action="/api/dias-sem-aula" class="mb-4">
+<form method="post" action="{{ request.url_for('api/dias-sem-aula') }}" class="mb-4">
     <div class="row g-2">
         <div class="col-auto">
             <label class="form-label">Data</label>
@@ -36,11 +36,11 @@
             <td>{{ d.data }}</td>
             <td>{{ d.motivo }}</td>
             <td>
-                <a href="/dias-sem-aula/{{ d.id }}/editar" class="btn btn-sm btn-warning mb-1">
+                <a href="{{ request.url_for('dias-sem-aula/{dia_id}/editar', dia_id=d.id) }}" class="btn btn-sm btn-warning mb-1">
                     Editar
                 </a>
 
-                <form action="/dias-sem-aula/{{ d.id }}/remover" method="post"
+                <form action="{{ request.url_for('dias-sem-aula/{dia_id}/remover', dia_id=d.id) }}" method="post"
                     onsubmit="return confirm('Remover este dia sem aula?')">
                     <button class="btn btn-danger btn-sm">Remover</button>
                 </form>           

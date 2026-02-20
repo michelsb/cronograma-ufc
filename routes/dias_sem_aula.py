@@ -14,7 +14,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/dias-sem-aula")
+@router.get("/dias-sem-aula", name="dias-sem-aula")
 def listar_dias_sem_aula(request: Request,
                          sucesso: str | None = None,
                          erro: str | None = None,
@@ -29,7 +29,7 @@ def listar_dias_sem_aula(request: Request,
     )
 
 
-@router.get("/dias-sem-aula/{dia_id}/editar")
+@router.get("/dias-sem-aula/{dia_id}/editar", name="dias-sem-aula/{dia_id}/editar")
 def editar_dia_sem_aula_form(request: Request, dia_id: int, usuario = Depends(get_current_user)):
     with get_session() as session:
         dia = session.get(DiaSemAula, dia_id)
@@ -40,7 +40,7 @@ def editar_dia_sem_aula_form(request: Request, dia_id: int, usuario = Depends(ge
     )
 
 
-@router.post("/api/dias-sem-aula")
+@router.post("/api/dias-sem-aula", name="api/dias-sem-aula")
 def cadastrar_dia_sem_aula(data: str = Form(...), motivo: str = Form(...), usuario = Depends(get_current_user)):
     with get_session() as session:
         data_convertida = date.fromisoformat(data)
@@ -57,7 +57,7 @@ def cadastrar_dia_sem_aula(data: str = Form(...), motivo: str = Form(...), usuar
     )
 
 
-@router.post("/api/dias-sem-aula/{dia_id}/editar")
+@router.post("/api/dias-sem-aula/{dia_id}/editar", name="api/dias-sem-aula/{dia_id}/editar")
 def editar_dia_sem_aula(dia_id: int,
                         data: str = Form(...),
                         motivo: str = Form(...), usuario = Depends(get_current_user)):
@@ -80,7 +80,7 @@ def editar_dia_sem_aula(dia_id: int,
         status_code=303
     )
 
-@router.post("/dias-sem-aula/{dia_id}/remover")
+@router.post("/dias-sem-aula/{dia_id}/remover", name="dias-sem-aula/{dia_id}/remover")
 def remover_dia_sem_aula(dia_id: int, usuario = Depends(get_current_user)):
     with get_session() as session:
         dia = session.get(DiaSemAula, dia_id)

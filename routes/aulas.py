@@ -12,7 +12,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/disciplinas/{disciplina_id}/aulas")
+@router.get("/disciplinas/{disciplina_id}/aulas", name="disciplinas/{disciplina_id}/aulas")
 def pagina_aulas(disciplina_id: int,
                  request: Request,
                  sucesso: str | None = None,
@@ -32,7 +32,7 @@ def pagina_aulas(disciplina_id: int,
     )
 
 
-@router.post("/api/aulas/{aula_id}")
+@router.post("/api/aulas/{aula_id}", name="api/aulas/{aula_id}")
 def api_atualizar_aula(
     aula_id: int,
     conteudo: str = Form(""),

@@ -12,7 +12,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/disciplinas")
+@router.get("/disciplinas", name="disciplinas")
 def listar_disciplinas(request: Request,
                        semestre: str | None = None,
                        sucesso: str | None = None,
@@ -46,7 +46,7 @@ def listar_disciplinas(request: Request,
         }
     )
 
-@router.get("/disciplinas/{disciplina_id}/editar")
+@router.get("/disciplinas/{disciplina_id}/editar", name="disciplinas/{disciplina_id}/editar")
 def editar_disciplina_form(request: Request, 
                            disciplina_id: int,
                            usuario = Depends(get_current_user)):
@@ -59,7 +59,7 @@ def editar_disciplina_form(request: Request,
     )
 
 
-@router.post("/api/disciplinas/{disciplina_id}/editar")
+@router.post("/api/disciplinas/{disciplina_id}/editar", name="api/disciplinas/{disciplina_id}/editar")
 def editar_disciplina(disciplina_id: int,
                       nome: str = Form(...),
                       professor: str = Form(...),
@@ -79,7 +79,7 @@ def editar_disciplina(disciplina_id: int,
     )
 
 
-@router.post("/disciplinas/{disciplina_id}/remover")
+@router.post("/disciplinas/{disciplina_id}/remover", name="disciplinas/{disciplina_id}/remover")
 def remover_disciplina(disciplina_id: int,
                        usuario = Depends(get_current_user)):
     with get_session() as session:
@@ -101,7 +101,7 @@ def remover_disciplina(disciplina_id: int,
         status_code=303
     )
 
-@router.get("/disciplinas/{disciplina_id}/dashboard")
+@router.get("/disciplinas/{disciplina_id}/dashboard", name="disciplinas/{disciplina_id}/dashboard")
 def dashboard_disciplina(request: Request, disciplina_id: int, usuario = Depends(get_current_user)):
     with get_session() as session:
         disciplina = session.get(Disciplina, disciplina_id)
@@ -143,7 +143,7 @@ def dashboard_disciplina(request: Request, disciplina_id: int, usuario = Depends
         }
     )
 
-@router.get("/disciplinas/{disciplina_id}/view")
+@router.get("/disciplinas/{disciplina_id}/view", name="disciplinas/{disciplina_id}/view")
 def dashboard_disciplina(request: Request, disciplina_id: int):
     with get_session() as session:
         disciplina = session.get(Disciplina, disciplina_id)

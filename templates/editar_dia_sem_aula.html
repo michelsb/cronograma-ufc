@@ -4,7 +4,7 @@
 {% block content %}
 <h1>Editar Dia sem Aula</h1>
 
-<form method="post" action="/api/dias-sem-aula/{{ dia.id }}/editar">
+<form method="post" action="{{ request.url_for('api/dias-sem-aula/{dia_id}/editar', dia_id=dia.id) }}">
     <div class="mb-3">
         <label class="form-label">Data</label>
         <input type="date" name="data" class="form-control"

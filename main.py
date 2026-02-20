@@ -1,3 +1,4 @@
+import os
 from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -7,7 +8,8 @@ from database import init_db, get_session
 from startup_user import criar_usuario_inicial
 from routes import auth, home, disciplinas, aulas, dias_sem_aula, importacao, dashboard
 
-app = FastAPI()
+ROOT_PATH = os.getenv("ROOT_PATH", "")
+app = FastAPI(root_path=ROOT_PATH)
 
 # Templates e estáticos
 templates = Jinja2Templates(directory="templates")

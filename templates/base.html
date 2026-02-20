@@ -104,9 +104,9 @@
     <h4 class="text-center mb-4">Cronograma UFC</h4>
 
     <a href="/">🏠 Início</a>
-    <a href="/disciplinas">📚 Disciplinas</a>
-    <a href="/dias-sem-aula">📅 Dias sem aula</a>
-    <a href="/importar-texto">📥 Importar grade</a>
+    <a href="{{ request.url_for('disciplinas') }}">📚 Disciplinas</a>
+    <a href="{{ request.url_for('dias-sem-aula') }}">📅 Dias sem aula</a>
+    <a href="{{ request.url_for('importar-texto') }}">📥 Importar grade</a>
 </div>
 {% endif %}
 
