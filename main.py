@@ -28,26 +28,14 @@ def health():
 def debug(request: Request): 
     return dict(request.headers)
 
-PREFIX = ROOT_PATH
-
-app.include_router(auth.router, prefix=PREFIX)
-app.include_router(disciplinas.router, prefix=PREFIX)
-app.include_router(home.router, prefix=PREFIX)
-app.include_router(aulas.router, prefix=PREFIX)
-app.include_router(dias_sem_aula.router, prefix=PREFIX)
-app.include_router(importacao.router, prefix=PREFIX)
-app.include_router(dashboard.router, prefix=PREFIX)
+# ROTAS PÚBLICAS
+app.include_router(auth.router)  # login/logout
+app.include_router(disciplinas.router)  # dashboard público está dentro deste router
 
 
-# # ROTAS PÚBLICAS
-# app.include_router(auth.router)  # login/logout
-# app.include_router(disciplinas.router)  # dashboard público está dentro deste router
-
-
-# # ROTAS PRIVADAS
-# app.include_router(home.router)
-# app.include_router(aulas.router)
-# app.include_router(dias_sem_aula.router)
-# app.include_router(importacao.router)
-# app.include_router(dashboard.router)
-
+# ROTAS PRIVADAS
+app.include_router(home.router)
+app.include_router(aulas.router)
+app.include_router(dias_sem_aula.router)
+app.include_router(importacao.router)
+app.include_router(dashboard.router)
