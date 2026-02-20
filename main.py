@@ -21,8 +21,8 @@ def startup():
     criar_usuario_inicial()  # Cria o usuário admin se não existir
 
 @app.get("/health") 
-def health(): 
-    return {"status": "ok"}
+def health(request: Request): 
+    return {"status": "ok", "root_path": request.scope.get("root_path")}
 
 @app.get("/debug") 
 def debug(request: Request): 
