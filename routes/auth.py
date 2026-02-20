@@ -19,7 +19,7 @@ def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
-@router.post("/login", name="login")
+@router.post("/login", name="login_post")
 def login(
     request: Request,
     email: str = Form(...),
