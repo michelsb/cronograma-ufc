@@ -4,7 +4,7 @@
 
 <h1 class="mb-3">Importar Grade (Colar Texto)</h1>
 
-<form action="/api/importar-texto-preview" method="post">
+<form action="{{ request.url_for('api/importar-texto-preview') }}" method="post">
     <div class="mb-3">
         <label class="form-label">Cole aqui o texto da grade</label>
         <textarea class="form-control" name="texto" rows="18" required></textarea>

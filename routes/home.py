@@ -11,7 +11,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/", include_in_schema=False)
+@router.get("/", include_in_schema=False, name="home")
 def home(request: Request,
          usuario = Depends(get_current_user)):
     with get_session() as session:

@@ -12,12 +12,12 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/importar-texto")
+@router.get("/importar-texto", name="importar-texto")
 def importar_texto(request: Request, usuario = Depends(get_current_user)):
     return templates.TemplateResponse("importar_texto.html", {"request": request, "usuario": usuario})
 
 
-@router.post("/api/importar-texto-preview")
+@router.post("/api/importar-texto-preview", name="api/importar-texto-preview")
 def api_importar_texto_preview(request: Request, texto: str = Form(...), usuario = Depends(get_current_user)):
     disciplinas = parse_texto_grade(texto)
 
@@ -27,8 +27,8 @@ def api_importar_texto_preview(request: Request, texto: str = Form(...), usuario
     )
 
 
-@router.post("/api/importar-texto-confirmar")
-def api_importar_texto_confirmar(texto: str = Form(...), usuario = Depends(get_current_user)):
+@router.post("/api/importar-texto-confirmar", name="api/importar-texto-confirmar")
+def api_importar_texto_confirmar(request: Request, texto: str = Form(...), usuario = Depends(get_current_user)):
     disciplinas = parse_texto_grade(texto)
 
     with get_session() as session:
@@ -37,4 +37,4 @@ def api_importar_texto_confirmar(texto: str = Form(...), usuario = Depends(get_c
         for d in session.exec(select(Disciplina)).all():
             gerar_aulas_para_disciplina(session, d)
 
-    return RedirectResponse("/disciplinas?sucesso=Disciplinas+importadas+com+sucesso", status_code=303)
+    return RedirectResponse(url=request.url_for("disciplinas") + "?sucesso=Disciplinas+importadas+com+sucesso", status_code=303)

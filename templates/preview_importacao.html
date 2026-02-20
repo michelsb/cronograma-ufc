@@ -35,7 +35,7 @@
     </tbody>
 </table>
 
-<form action="/api/importar-texto-confirmar" method="post">
+<form action="{{ request.url_for('api/importar-texto-confirmar') }}" method="post">
     <input type="hidden" name="texto" value="{{ texto }}">
     <button class="btn btn-success">Confirmar Importação</button>
 </form>

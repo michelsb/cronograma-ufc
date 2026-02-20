@@ -41,7 +41,10 @@ def editar_dia_sem_aula_form(request: Request, dia_id: int, usuario = Depends(ge
 
 
 @router.post("/api/dias-sem-aula", name="api/dias-sem-aula")
-def cadastrar_dia_sem_aula(data: str = Form(...), motivo: str = Form(...), usuario = Depends(get_current_user)):
+def cadastrar_dia_sem_aula(request: Request,
+                           data: str = Form(...),
+                           motivo: str = Form(...),
+                           usuario = Depends(get_current_user)):
     with get_session() as session:
         data_convertida = date.fromisoformat(data)
 
@@ -52,13 +55,13 @@ def cadastrar_dia_sem_aula(data: str = Form(...), motivo: str = Form(...), usuar
         recalcular_aulas_por_data(session, data_convertida)
 
     return RedirectResponse(
-        url="/dias-sem-aula?sucesso=Dia+sem+aula+adicionado",
+        url=request.url_for("dias-sem-aula") + "?sucesso=Dia+sem+aula+adicionado",
         status_code=303
     )
 
 
 @router.post("/api/dias-sem-aula/{dia_id}/editar", name="api/dias-sem-aula/{dia_id}/editar")
-def editar_dia_sem_aula(dia_id: int,
+def editar_dia_sem_aula(dia_id: int, request: Request,
                         data: str = Form(...),
                         motivo: str = Form(...), usuario = Depends(get_current_user)):
 
@@ -76,17 +79,17 @@ def editar_dia_sem_aula(dia_id: int,
         recalcular_aulas_por_data(session, data_nova)
 
     return RedirectResponse(
-        url="/dias-sem-aula?sucesso=Dia+sem+aula+atualizado",
+        url=request.url_for("dias-sem-aula") + "?sucesso=Dia+sem+aula+atualizado",
         status_code=303
     )
 
 @router.post("/dias-sem-aula/{dia_id}/remover", name="dias-sem-aula/{dia_id}/remover")
-def remover_dia_sem_aula(dia_id: int, usuario = Depends(get_current_user)):
+def remover_dia_sem_aula(request: Request, dia_id: int, usuario = Depends(get_current_user)):
     with get_session() as session:
         dia = session.get(DiaSemAula, dia_id)
         if not dia:
             return RedirectResponse(
-                url="/dias-sem-aula?erro=Dia+não+encontrado",
+                url=request.url_for("dias-sem-aula") + "?erro=Dia+não+encontrado",
                 status_code=303
             )
         data_afetada = dia.data
@@ -98,6 +101,6 @@ def remover_dia_sem_aula(dia_id: int, usuario = Depends(get_current_user)):
         recalcular_aulas_por_data(session, data_afetada)
 
     return RedirectResponse(
-        url="/dias-sem-aula?sucesso=Dia+sem+aula+removido",
+        url=request.url_for("dias-sem-aula") + "?sucesso=Dia+sem+aula+removido",
         status_code=303
     )

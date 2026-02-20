@@ -60,7 +60,8 @@ def editar_disciplina_form(request: Request,
 
 
 @router.post("/api/disciplinas/{disciplina_id}/editar", name="api/disciplinas/{disciplina_id}/editar")
-def editar_disciplina(disciplina_id: int,
+def editar_disciplina(request: Request, 
+                      disciplina_id: int,
                       nome: str = Form(...),
                       professor: str = Form(...),
                       turma: str = Form(...),
@@ -74,20 +75,20 @@ def editar_disciplina(disciplina_id: int,
         session.commit()
 
     return RedirectResponse(
-        url="/disciplinas?sucesso=Disciplina+atualizada+com+sucesso",
+        url=request.url_for("disciplinas") + "?sucesso=Disciplina+atualizada+com+sucesso",
         status_code=303
     )
 
 
 @router.post("/disciplinas/{disciplina_id}/remover", name="disciplinas/{disciplina_id}/remover")
-def remover_disciplina(disciplina_id: int,
+def remover_disciplina(request: Request, disciplina_id: int,
                        usuario = Depends(get_current_user)):
     with get_session() as session:
         disciplina = session.get(Disciplina, disciplina_id)
 
         if not disciplina:
             return RedirectResponse(
-                url="/disciplinas?erro=Disciplina+não+encontrada",
+                url=request.url_for("disciplinas") + "?erro=Disciplina+não+encontrada",
                 status_code=303
             )
 
@@ -97,7 +98,7 @@ def remover_disciplina(disciplina_id: int,
         session.commit()
 
     return RedirectResponse(
-        url="/disciplinas?sucesso=Disciplina+removida+com+sucesso",
+        url=request.url_for("disciplinas") + "?sucesso=Disciplina+removida+com+sucesso",
         status_code=303
     )
 

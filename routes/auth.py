@@ -14,12 +14,12 @@ templates = Jinja2Templates(directory="templates")
 router = APIRouter()
 
 
-@router.get("/login")
+@router.get("/login", name="login")
 def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
-@router.post("/login")
+@router.post("/login", name="login")
 def login(
     request: Request,
     email: str = Form(...),
@@ -42,7 +42,7 @@ def login(
         expires_delta=timedelta(minutes=60),
     )
 
-    response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+    response = RedirectResponse(url=request.url_for("home"), status_code=status.HTTP_302_FOUND)
     response.set_cookie(
         key="access_token",
         value=access_token,
@@ -53,8 +53,8 @@ def login(
     return response
 
 
-@router.get("/logout")
-def logout():
-    response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+@router.get("/logout", name="logout")
+def logout(request: Request):
+    response = RedirectResponse(url=request.url_for("login"), status_code=status.HTTP_302_FOUND)
     response.delete_cookie("access_token")
     return response

@@ -11,7 +11,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/dashboard")
+@router.get("/dashboard", name="dashboard")
 def pagina_dashboard(request: Request, semestre: str = "2026.1", usuario = Depends(get_current_user)):
     return templates.TemplateResponse(
         "dashboard.html",
@@ -19,7 +19,7 @@ def pagina_dashboard(request: Request, semestre: str = "2026.1", usuario = Depen
     )
 
 
-@router.get("/api/dashboard-resumo")
+@router.get("/api/dashboard-resumo", name="api/dashboard-resumo")
 def api_dashboard_resumo(semestre: str = "2026.1", usuario = Depends(get_current_user)):
     with get_session() as session:
         aulas = session.exec(

@@ -34,6 +34,7 @@ def pagina_aulas(disciplina_id: int,
 
 @router.post("/api/aulas/{aula_id}", name="api/aulas/{aula_id}")
 def api_atualizar_aula(
+    request: Request,
     aula_id: int,
     conteudo: str = Form(""),
     atividades: str = Form(""),
@@ -57,12 +58,12 @@ def api_atualizar_aula(
         session.commit()
 
     return RedirectResponse(
-        url=f"/disciplinas/{disciplina_id}/aulas?sucesso=Aula+atualizada",
+        url=request.url_for("disciplinas/{disciplina_id}/aulas", disciplina_id=disciplina_id) + "?sucesso=Aula+atualizada",
         status_code=303
     )
 
 
-@router.get("/api/disciplinas/{disciplina_id}/cronograma-json")
+@router.get("/api/disciplinas/{disciplina_id}/cronograma-json", name="api/disciplinas/{disciplina_id}/cronograma-json")
 def api_cronograma_json(disciplina_id: int,
                         usuario = Depends(get_current_user)):
     with get_session() as session:

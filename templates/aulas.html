@@ -21,7 +21,7 @@
   <tbody>
     {% for a in aulas %}
     <tr class="{% if a.sem_aula %}table-danger{% endif %}">
-      <form action="/api/aulas/{{ a.id }}" method="post">
+      <form action="{{ request.url_for('api_atualizar_aula', aula_id=a.id) }}" method="post">
 
         <!-- DATA -->
         <td>{{ a.data }}</td>
