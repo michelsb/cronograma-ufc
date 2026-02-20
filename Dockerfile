@@ -6,7 +6,7 @@ WORKDIR /build
 # Instalar build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    postgresql-dev \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar e criar wheel de dependências
