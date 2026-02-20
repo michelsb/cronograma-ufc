@@ -58,7 +58,7 @@ def api_atualizar_aula(
         session.commit()
 
     return RedirectResponse(
-        url=request.url_for("disciplinas/{disciplina_id}/aulas", disciplina_id=disciplina_id) + "?sucesso=Aula+atualizada",
+        url=f"{request.url_for('disciplinas/{disciplina_id}/aulas', disciplina_id=disciplina_id)}?sucesso=Aula+atualizada",
         status_code=303
     )
 

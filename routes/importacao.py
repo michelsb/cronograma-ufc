@@ -37,4 +37,4 @@ def api_importar_texto_confirmar(request: Request, texto: str = Form(...), usuar
         for d in session.exec(select(Disciplina)).all():
             gerar_aulas_para_disciplina(session, d)
 
-    return RedirectResponse(url=request.url_for("disciplinas") + "?sucesso=Disciplinas+importadas+com+sucesso", status_code=303)
+    return RedirectResponse(url=f"{request.url_for('disciplinas')}?sucesso=Disciplinas+importadas+com+sucesso", status_code=303)

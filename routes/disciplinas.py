@@ -75,7 +75,7 @@ def editar_disciplina(request: Request,
         session.commit()
 
     return RedirectResponse(
-        url=request.url_for("disciplinas") + "?sucesso=Disciplina+atualizada+com+sucesso",
+        url=f"{request.url_for('disciplinas')}?sucesso=Disciplina+atualizada+com+sucesso",
         status_code=303
     )
 
@@ -98,7 +98,7 @@ def remover_disciplina(request: Request, disciplina_id: int,
         session.commit()
 
     return RedirectResponse(
-        url=request.url_for("disciplinas") + "?sucesso=Disciplina+removida+com+sucesso",
+        url=f"{request.url_for('disciplinas')}?sucesso=Disciplina+removida+com+sucesso",
         status_code=303
     )
 

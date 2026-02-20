@@ -79,7 +79,7 @@ def editar_dia_sem_aula(dia_id: int, request: Request,
         recalcular_aulas_por_data(session, data_nova)
 
     return RedirectResponse(
-        url=request.url_for("dias-sem-aula") + "?sucesso=Dia+sem+aula+atualizado",
+        url=f"{request.url_for('dias-sem-aula')}?sucesso=Dia+sem+aula+atualizado",
         status_code=303
     )
 
@@ -89,7 +89,7 @@ def remover_dia_sem_aula(request: Request, dia_id: int, usuario = Depends(get_cu
         dia = session.get(DiaSemAula, dia_id)
         if not dia:
             return RedirectResponse(
-                url=request.url_for("dias-sem-aula") + "?erro=Dia+não+encontrado",
+                url=f"{request.url_for('dias-sem-aula')}?erro=Dia+não+encontrado",
                 status_code=303
             )
         data_afetada = dia.data
@@ -101,6 +101,6 @@ def remover_dia_sem_aula(request: Request, dia_id: int, usuario = Depends(get_cu
         recalcular_aulas_por_data(session, data_afetada)
 
     return RedirectResponse(
-        url=request.url_for("dias-sem-aula") + "?sucesso=Dia+sem+aula+removido",
+        url=f"{request.url_for('dias-sem-aula')}?sucesso=Dia+sem+aula+removido",
         status_code=303
     )
