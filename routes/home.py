@@ -28,7 +28,8 @@ def home(request: Request,
                 "total_dias_sem_aula": 0,
                 "aulas_dadas_geral": 0,
                 "aulas_restantes_geral": 0,
-                "semestre": "Nenhum semestre cadastrado"
+                "semestre": "Nenhum semestre cadastrado",
+                "usuario": usuario
             })
 
         disciplinas = session.exec(

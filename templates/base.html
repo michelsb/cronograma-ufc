@@ -96,14 +96,14 @@
 <button id="toggleTheme" class="btn btn-outline-secondary">🌙</button>
 
 {% if usuario %}
-<a href="/logout" class="btn btn-outline-danger" style="position: fixed; top: 15px; right: 80px; z-index: 2000;">
+<a href="{{ request.url_for('logout') }}" class="btn btn-outline-danger" style="position: fixed; top: 15px; right: 80px; z-index: 2000;">
     Sair
 </a>
 <button id="toggleSidebar" class="btn btn-outline-primary">☰</button>
 <div class="sidebar" id="sidebar">
     <h4 class="text-center mb-4">Cronograma UFC</h4>
 
-    <a href="/">🏠 Início</a>
+    <a href="{{ request.url_for('home') }}">🏠 Início</a>
     <a href="{{ request.url_for('disciplinas') }}">📚 Disciplinas</a>
     <a href="{{ request.url_for('dias-sem-aula') }}">📅 Dias sem aula</a>
     <a href="{{ request.url_for('importar-texto') }}">📥 Importar grade</a>
