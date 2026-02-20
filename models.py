@@ -34,8 +34,8 @@ class Disciplina(SQLModel, table=True):
     professor: str
     turma: str
     semestre: str
-    periodo_inicio: str
-    periodo_fim: str
+    periodo_inicio: date
+    periodo_fim: date
     carga_horaria_semanal: int = Field(default=0)
     
     horarios: List["Horario"] = Relationship(back_populates="disciplina")
@@ -68,7 +68,7 @@ class Aula(SQLModel, table=True):
     Pode ser editada pelo professor via frontend.
     """
     id: Optional[int] = Field(default=None, primary_key=True)
-    data: str
+    data: date
     dia_semana: str
     conteudo: str = ""
     atividades: str = ""
