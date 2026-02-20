@@ -31,7 +31,7 @@ def login(
             "login.html",
             {
                 "request": request,
-                "erro": "E-mail ou senha inválidos",
+                "error": "E-mail ou senha inválidos",
                 "email": email,
             },
             status_code=status.HTTP_400_BAD_REQUEST,
