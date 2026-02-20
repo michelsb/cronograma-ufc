@@ -1,0 +1,17 @@
+<div class="container mt-3">
+
+    {% if sucesso %}
+    <div class="alert alert-success alert-dismissible fade show auto-dismiss" role="alert">
+        {{ sucesso }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+    {% if erro %}
+    <div class="alert alert-danger alert-dismissible fade show auto-dismiss" role="alert">
+        {{ erro }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+</div>

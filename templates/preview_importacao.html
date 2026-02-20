@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Pré-visualização{% endblock %}
+{% block content %}
+
+<h1 class="mb-3">Pré-visualização da Importação</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Turma</th>
+            <th>CH Semanal</th>
+            <th>Semestre</th>
+            <th>Horários</th>
+            <th>Período</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in disciplinas %}
+        <tr>
+            <td>{{ d.codigo }}</td>
+            <td>{{ d.nome }}</td>
+            <td>{{ d.turma }}</td>
+            <td>{{ d.carga_horaria_semanal }}</td>
+            <td>{{ d.semestre }}</td>
+            <td>
+                {% for h in d.horarios %}
+                    {{ h.dia }} {{ h.inicio }}-{{ h.fim }}<br>
+                {% endfor %}
+            </td>
+            <td>{{ d.periodo_inicio }} → {{ d.periodo_fim }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<form action="/api/importar-texto-confirmar" method="post">
+    <input type="hidden" name="texto" value="{{ texto }}">
+    <button class="btn btn-success">Confirmar Importação</button>
+</form>
+
+{% endblock %}

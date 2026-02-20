@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Início{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Sistema de Cronograma — {{ semestre }}</h1>
+
+<div class="row">
+
+    <!-- Disciplinas -->
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">📚 Disciplinas</h5>
+                <p class="display-6">{{ total_disciplinas }}</p>
+                <p class="text-muted">Cadastradas no sistema</p>
+                <a href="/disciplinas" class="btn btn-primary">Ver disciplinas</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aulas -->
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">📝 Aulas geradas</h5>
+                <p class="display-6">{{ total_aulas }}</p>
+                <p class="text-muted">Aulas no semestre</p>
+                <a href="/disciplinas" class="btn btn-primary">Ver aulas</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dias sem aula -->
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">📅 Dias sem aula</h5>
+                <p class="display-6">{{ total_dias_sem_aula }}</p>
+                <p class="text-muted">Feriados e recessos</p>
+                <a href="/dias-sem-aula" class="btn btn-primary">Gerenciar</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- GRÁFICO -->
+<div class="card shadow-sm mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Progresso geral do semestre</h5>
+
+        <div style="max-width: 380px; margin: auto;">
+            <canvas id="graficoGeral"></canvas>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+new Chart(document.getElementById('graficoGeral'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Aulas dadas', 'Aulas restantes', 'Dias sem aula'],
+        datasets: [{
+            data: [{{ aulas_dadas_geral }}, {{ aulas_restantes_geral }}, {{ total_dias_sem_aula }}],
+            backgroundColor: ['#198754', '#0d6efd', '#dc3545']
+        }]
+    }
+});
+</script>
+{% endblock %}

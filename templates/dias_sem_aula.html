@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Dias sem Aula{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Dias sem Aula</h1>
+
+<form method="post" action="/api/dias-sem-aula" class="mb-4">
+    <div class="row g-2">
+        <div class="col-auto">
+            <label class="form-label">Data</label>
+            <input type="date" name="data" class="form-control" required>
+        </div>
+
+        <div class="col-auto">
+            <label class="form-label">Motivo</label>
+            <input type="text" name="motivo" class="form-control" required>
+        </div>
+
+        <div class="col-auto align-self-end">
+            <button class="btn btn-primary">Adicionar</button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Motivo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in dias %}
+        <tr>
+            <td>{{ d.data }}</td>
+            <td>{{ d.motivo }}</td>
+            <td>
+                <a href="/dias-sem-aula/{{ d.id }}/editar" class="btn btn-sm btn-warning mb-1">
+                    Editar
+                </a>
+
+                <form action="/dias-sem-aula/{{ d.id }}/remover" method="post"
+                    onsubmit="return confirm('Remover este dia sem aula?')">
+                    <button class="btn btn-danger btn-sm">Remover</button>
+                </form>           
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

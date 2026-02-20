@@ -1,0 +1,44 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+# Environment and secrets (exclude .env.example which is documentation)
+.env
+.env.*
+!.env.example
+export-env-dev.*
+.export-env-ps-dev
+venv/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Cache and testing
+.pytest_cache/
+.mypy_cache/
+.cache/
+.tox/
+
+# Coverage and reports
+.coverage
+htmlcov/
+
+# Tools and IDE
+.ropeproject/
+.eggs/
+
+# Logs and local database
+*.log
+*.sqlite3
+
+# Certificates and keys
+*.pem
+*.key
+
+# Node (if used)
+node_modules/

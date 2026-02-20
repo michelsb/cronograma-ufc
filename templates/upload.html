@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Importar Grade{% endblock %}
+{% block content %}
+<h1 class="mb-3">Importar Grade do SIGAA</h1>
+<form class="card p-3" action="/api/upload-grade" method="post" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label class="form-label">Semestre</label>
+    <input class="form-control" type="text" name="semestre" value="2026.1">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Arquivo PDF</label>
+    <input class="form-control" type="file" name="arquivo" accept="application/pdf">
+  </div>
+  <button class="btn btn-primary" type="submit">Enviar</button>
+</form>
+{% endblock %}
