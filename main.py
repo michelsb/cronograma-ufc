@@ -7,9 +7,12 @@ from fastapi.responses import JSONResponse
 from database import init_db, get_session
 from startup_user import criar_usuario_inicial
 from routes import auth, home, disciplinas, aulas, dias_sem_aula, importacao, dashboard
+from starlette.middleware import ProxyHeadersMiddleware
 
 ROOT_PATH = os.getenv("ROOT_PATH", "")
 app = FastAPI(root_path=ROOT_PATH)
+
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 # Templates e estáticos
 templates = Jinja2Templates(directory="templates")
