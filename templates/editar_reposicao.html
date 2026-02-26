@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Editar Reposição{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Editar Reposição — {{ disciplina.nome }} ({{ disciplina.turma }})</h1>
+
+<form method="post" class="row g-3">
+
+    <div class="col-md-3">
+        <label class="form-label">Data</label>
+        <input type="date" name="data" class="form-control" value="{{ reposicao.data }}" required>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Início</label>
+        <input type="time" name="inicio" class="form-control" value="{{ reposicao.inicio }}" required>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Fim</label>
+        <input type="time" name="fim" class="form-control" value="{{ reposicao.fim }}" required>
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="substitui_aula"
+                   {% if reposicao.substitui_aula %}checked{% endif %}>
+            <label class="form-check-label">Substitui aula normal</label>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Conteúdo</label>
+        <textarea name="conteudo" class="form-control" rows="2">{{ reposicao.conteudo }}</textarea>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Atividades</label>
+        <textarea name="atividades" class="form-control" rows="2">{{ reposicao.atividades }}</textarea>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Observações</label>
+        <textarea name="observacoes" class="form-control" rows="2">{{ reposicao.observacoes }}</textarea>
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary">Salvar alterações</button>
+        <a href="{{ url_for('reposicoes_list', disciplina_id=disciplina.id) }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

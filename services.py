@@ -31,6 +31,9 @@ from datetime import date, datetime, timedelta
 # Utilidades
 # ---------------------------------------------------------
 
+def parse_date(value: str) -> date:
+    return date.fromisoformat(value)
+
 def extrair_carga_horaria(linha: str) -> int:
     """
     Extrai a carga horária semanal de uma linha do tipo:
@@ -131,8 +134,11 @@ def parse_texto_grade(texto: str) -> List[Dict]:
             linha_periodo = linhas[j]
             m_p = re.match(r"\((\d{2}/\d{2}/\d{4}) - (\d{2}/\d{2}/\d{4})\)", linha_periodo)
 
-            inicio = datetime.strptime(m_p.group(1), "%d/%m/%Y").strftime("%Y-%m-%d")
-            fim = datetime.strptime(m_p.group(2), "%d/%m/%Y").strftime("%Y-%m-%d")
+            #inicio = datetime.strptime(m_p.group(1), "%d/%m/%Y").strftime("%Y-%m-%d")
+            #fim = datetime.strptime(m_p.group(2), "%d/%m/%Y").strftime("%Y-%m-%d")
+
+            inicio = datetime.strptime(m_p.group(1), "%d/%m/%Y").date()
+            fim = datetime.strptime(m_p.group(2), "%d/%m/%Y").date()
 
             disciplinas.append({
                 "codigo": codigo,
@@ -303,6 +309,7 @@ def gerar_aulas_para_disciplina(session: Session, disciplina: Disciplina) -> Non
             usadas.add(chave)
 
             # Atualiza a data (caso o período tenha mudado)
+            #aula.data = str(data_aula)
             aula.data = str(data_aula)
 
             # Atualiza flags de sem aula
@@ -320,7 +327,7 @@ def gerar_aulas_para_disciplina(session: Session, disciplina: Disciplina) -> Non
         # Se não existe aula para essa data/horário, criar uma nova
         nova = Aula(
             disciplina_id=disciplina.id,
-            data=str(data_aula),
+            data=data_aula,
             dia_semana=dia_semana,
             conteudo="",
             atividades="",

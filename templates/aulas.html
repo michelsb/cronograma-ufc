@@ -24,16 +24,28 @@
       <form action="{{ request.url_for('api/aulas/{aula_id}', aula_id=a.id) }}" method="post">
 
         <!-- DATA -->
-        <td>{{ a.data }}</td>
+        <td>
+          <strong>{{ a.data }}</strong><br>
+          <small class="text-muted">{{ a.dia_semana }}</small><br>
+
+          {% if a.horarios_do_dia %}
+            {% for h in a.horarios_do_dia %}
+              <small>{{ h.inicio }}–{{ h.fim }}</small><br>
+            {% endfor %}
+          {% else %}
+            <small class="text-muted">Sem horário</small>
+          {% endif %}
+        </td>
+
 
         <!-- CONTEÚDO -->
         <td>
-          <input class="form-control form-control-sm" name="conteudo" value="{{ a.conteudo }}">
+            <textarea class="form-control form-control-sm" name="conteudo" rows="2">{{ a.conteudo }}</textarea>
         </td>
-
+        
         <!-- ATIVIDADES -->
         <td>
-          <input class="form-control form-control-sm" name="atividades" value="{{ a.atividades }}">
+          <textarea class="form-control form-control-sm" name="atividades" rows="2">{{ a.atividades }}</textarea>
         </td>
 
         <!-- PRESENÇA (dropdown) -->
@@ -47,7 +59,7 @@
 
         <!-- OBSERVAÇÕES -->
         <td>
-          <input class="form-control form-control-sm" name="observacoes" value="{{ a.observacoes }}">
+          <textarea class="form-control form-control-sm" name="observacoes" rows="2">{{ a.observacoes }}</textarea>
         </td>
 
         <!-- SEM AULA -->

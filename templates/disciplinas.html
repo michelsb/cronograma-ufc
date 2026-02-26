@@ -63,6 +63,10 @@
                     Ver Aulas
                 </a>
 
+                <a href="{{ request.url_for('reposicoes_list', disciplina_id=d.id) }}" class="btn btn-sm btn-secondary mb-1">
+                    Ver Reposições
+                </a>
+
                 <a href="{{ request.url_for('disciplinas/{disciplina_id}/editar', disciplina_id=d.id) }}" class="btn btn-sm btn-warning mb-1">
                     Editar
                 </a>

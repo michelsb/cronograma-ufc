@@ -40,6 +40,7 @@ class Disciplina(SQLModel, table=True):
     
     horarios: List["Horario"] = Relationship(back_populates="disciplina")
     aulas: List["Aula"] = Relationship(back_populates="disciplina")
+    reposicoes: List["AulaReposicao"] = Relationship(back_populates="disciplina")
 
 
 class Horario(SQLModel, table=True):
@@ -80,6 +81,35 @@ class Aula(SQLModel, table=True):
     disciplina_id: int = Field(foreign_key="disciplina.id")
     disciplina: Disciplina = Relationship(back_populates="aulas")
 
+    @property
+    def dia_semana(self):
+        return self.data.strftime("%A").capitalize()
+
+    @property
+    def horarios_do_dia(self):
+        return [
+            h for h in self.disciplina.horarios
+            if h.dia.lower() == self.dia_semana.lower()
+        ]
+
+class AulaReposicao(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    disciplina_id: int = Field(foreign_key="disciplina.id")
+    disciplina: Disciplina = Relationship(back_populates="reposicoes")
+
+    data: date
+    dia_semana: str
+    inicio: str
+    fim: str
+
+    conteudo: str = ""
+    atividades: str = ""
+    presenca: str = ""
+    observacoes: str = ""
+
+    # Indica se substitui uma aula normal ou é extra
+    substitui_aula: bool = False
 
 class DiaSemAula(SQLModel, table=True):
     """

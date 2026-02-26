@@ -3,6 +3,7 @@ from fastapi.params import Depends
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlmodel import select
+from sqlalchemy.orm import selectinload
 
 from auth_utils import get_current_user
 from database import get_session
@@ -11,25 +12,41 @@ from models import Aula, Disciplina
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
-
 @router.get("/disciplinas/{disciplina_id}/aulas", name="disciplinas/{disciplina_id}/aulas")
-def pagina_aulas(disciplina_id: int,
-                 request: Request,
-                 sucesso: str | None = None,
-                 erro: str | None = None,
-                 usuario = Depends(get_current_user)):
-
+def pagina_aulas(
+    disciplina_id: int,
+    request: Request,
+    sucesso: str | None = None,
+    erro: str | None = None,
+    usuario = Depends(get_current_user)
+):
     with get_session() as session:
-        disciplina = session.get(Disciplina, disciplina_id)
-        aulas = session.exec(
-            select(Aula).where(Aula.disciplina_id == disciplina_id).order_by(Aula.data)
-        ).all()
+        disciplina = session.exec(
+            select(Disciplina)
+            .where(Disciplina.id == disciplina_id)
+            .options(
+                selectinload(Disciplina.horarios),
+                selectinload(Disciplina.aulas)
+            )
+        ).one()
 
-    return templates.TemplateResponse(
-        "aulas.html",
-        {"request": request, "disciplina": disciplina, "aulas": aulas,
-         "sucesso": sucesso, "erro": erro, "usuario": usuario}
-    )
+        # As aulas já vêm carregadas e anexadas à disciplina
+        aulas = sorted(disciplina.aulas, key=lambda a: a.data)
+
+        # IMPORTANTE: NÃO acessar nada lazy depois daqui
+        # porque o template vai usar apenas objetos já carregados
+
+        return templates.TemplateResponse(
+            "aulas.html",
+            {
+                "request": request,
+                "disciplina": disciplina,
+                "aulas": aulas,
+                "sucesso": sucesso,
+                "erro": erro,
+                "usuario": usuario
+            }
+        )
 
 
 @router.post("/api/aulas/{aula_id}", name="api/aulas/{aula_id}")

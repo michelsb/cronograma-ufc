@@ -5,11 +5,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
 
 from database import init_db, get_session
+from middleware.auth import AuthRedirectMiddleware
 from startup_user import criar_usuario_inicial
-from routes import auth, home, disciplinas, aulas, dias_sem_aula, importacao, dashboard
+from routes import auth, home, disciplinas, aulas, dias_sem_aula, importacao, dashboard, reposicoes
 
 ROOT_PATH = os.getenv("ROOT_PATH", "")
 app = FastAPI(root_path=ROOT_PATH)
+app.add_middleware(AuthRedirectMiddleware, root_path=ROOT_PATH)
 
 # Templates e estáticos
 templates = Jinja2Templates(directory="templates")
@@ -39,3 +41,4 @@ app.include_router(aulas.router)
 app.include_router(dias_sem_aula.router)
 app.include_router(importacao.router)
 app.include_router(dashboard.router)
+app.include_router(reposicoes.router)

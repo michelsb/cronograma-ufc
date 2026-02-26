@@ -90,9 +90,20 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td>{{ aula.data }}</td>
-                    <td>{{ aula.conteudo }}</td>
-                    <td>{{ aula.atividades }}</td>
+                    <td>
+                        <strong>{{ aula.data }}</strong><br>
+                        <small class="text-muted">{{ aula.dia_semana }}</small><br>
+
+                        {% if aula.horarios_do_dia %}
+                            {% for h in aula.horarios_do_dia %}
+                                <small>{{ h.inicio }}–{{ h.fim }}</small><br>
+                            {% endfor %}
+                        {% else %}
+                            <small class="text-muted">Sem horário</small>
+                        {% endif %}
+                    </td>
+                    <td style="white-space: pre-wrap;">{{ aula.conteudo }}</td>
+                    <td style="white-space: pre-wrap;">{{ aula.atividades }}</td>
                     <td>
                         {% if aula.presenca == "P" %}
                             <span class="presenca-icon presenca-P">●</span> Presente
@@ -102,9 +113,55 @@
                             <span class="presenca-icon presenca-N">●</span> —
                         {% endif %}
                     </td>
-                    <td>{{ aula.observacoes }}</td>
+                    <td style="white-space: pre-wrap;">{{ aula.observacoes }}</td>
                 </tr>
             {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2 class="mt-4">Aulas de Reposição</h2>
+
+<table class="table table-sm table-bordered align-middle mt-3">
+    <thead class="table-light">
+        <tr>
+            <th>Data</th>
+            <th>Conteúdo</th>
+            <th>Atividades</th>
+            <th>Presença</th>
+            <th>Observações</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for r in reposicoes %}
+        <tr class="table-warning">
+            <!-- DATA -->
+            <td>
+            <strong>{{ r.data }}</strong><br>
+            <small class="text-muted">{{ r.dia_semana }}</small><br>            
+            <small>{{ r.inicio }}–{{ r.fim }}</small><br>                
+            </td>
+
+            <td style="white-space: pre-wrap;">{{ r.conteudo }}</td>
+            <td style="white-space: pre-wrap;">{{ r.atividades }}</td>
+
+            <td>
+                {% if r.presenca == "P" %}
+                    <span class="presenca-icon presenca-P">●</span> Presente
+                {% elif r.presenca == "F" %}
+                    <span class="presenca-icon presenca-F">●</span> Falta
+                {% else %}
+                    <span class="presenca-icon presenca-N">●</span> —
+                {% endif %}
+            </td>
+
+            <td style="white-space: pre-wrap;">{{ r.observacoes }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-muted text-center">Nenhuma reposição cadastrada.</td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>

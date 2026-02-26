@@ -103,72 +103,107 @@ def remover_disciplina(request: Request, disciplina_id: int,
     )
 
 @router.get("/disciplinas/{disciplina_id}/dashboard", name="disciplinas/{disciplina_id}/dashboard")
-def dashboard_disciplina(request: Request, disciplina_id: int, usuario = Depends(get_current_user)):
+def dashboard_disciplina(
+    request: Request,
+    disciplina_id: int,
+    usuario = Depends(get_current_user)
+):
     with get_session() as session:
-        disciplina = session.get(Disciplina, disciplina_id)
+        disciplina = session.exec(
+            select(Disciplina)
+            .where(Disciplina.id == disciplina_id)
+            .options(
+                selectinload(Disciplina.horarios),
+                selectinload(Disciplina.aulas),
+                selectinload(Disciplina.reposicoes)   # <-- ADICIONADO
+            )
+        ).one()
 
-        aulas = session.exec(
-            select(Aula).where(Aula.disciplina_id == disciplina_id).order_by(Aula.data)
-        ).all()
-
-        # separar dias sem aula
+        # Aulas normais
+        aulas = sorted(disciplina.aulas, key=lambda a: a.data)
         dias_sem_aula = [a for a in aulas if a.sem_aula]
         aulas_normais = [a for a in aulas if not a.sem_aula]
 
-        # cálculo de créditos
-        creditos = disciplina.carga_horaria_semanal  # você precisa ter esse campo
+        # Reposições
+        reposicoes = sorted(disciplina.reposicoes, key=lambda r: r.data)
+
+        # Cálculo de aulas previstas
+        creditos = disciplina.carga_horaria_semanal
         aulas_previstas = (creditos * 16) // 2
 
-        # aulas disponíveis no semestre
-        aulas_disponiveis = len(aulas) - len(dias_sem_aula)
+        # Aulas disponíveis = aulas normais + reposições
+        aulas_disponiveis = len(aulas_normais) + len(reposicoes)
 
-        # aulas dadas
-        aulas_dadas = len([a for a in aulas_normais if a.atividades.strip() != ""])
+        # Aulas dadas
+        aulas_dadas = (
+            len([a for a in aulas_normais if a.atividades.strip() != ""])
+            + len([r for r in reposicoes if r.atividades.strip() != ""])
+        )
 
-        # faltas
-        faltas = len([a for a in aulas_normais if a.presenca == "F"])
+        # Faltas
+        faltas = (
+            len([a for a in aulas_normais if a.presenca == "F"])
+            + len([r for r in reposicoes if r.presenca == "F"])
+        )
 
-    return templates.TemplateResponse(
-        "dashboard_disciplina.html",
-        {
-            "request": request,
-            "disciplina": disciplina,
-            "aulas": aulas,
-            "aulas_normais": aulas_normais,
-            "dias_sem_aula_qtd": len(dias_sem_aula),
-            "aulas_previstas": aulas_previstas,
-            "aulas_disponiveis": aulas_disponiveis,
-            "aulas_dadas": aulas_dadas,
-            "faltas": faltas,
-            "usuario": usuario
-        }
-    )
-
+        return templates.TemplateResponse(
+            "dashboard_disciplina.html",
+            {
+                "request": request,
+                "disciplina": disciplina,
+                "aulas": aulas,
+                "aulas_normais": aulas_normais,
+                "reposicoes": reposicoes,   # <-- ADICIONADO
+                "dias_sem_aula_qtd": len(dias_sem_aula),
+                "aulas_previstas": aulas_previstas,
+                "aulas_disponiveis": aulas_disponiveis,
+                "aulas_dadas": aulas_dadas,
+                "faltas": faltas,
+                "usuario": usuario
+            }
+        )
+    
 @router.get("/disciplinas/{disciplina_id}/view", name="disciplinas/{disciplina_id}/view")
 def dashboard_disciplina(request: Request, disciplina_id: int):
+
     with get_session() as session:
-        disciplina = session.get(Disciplina, disciplina_id)
 
-        aulas = session.exec(
-            select(Aula).where(Aula.disciplina_id == disciplina_id).order_by(Aula.data)
-        ).all()
+        disciplina = session.exec(
+            select(Disciplina)
+            .where(Disciplina.id == disciplina_id)
+            .options(
+                selectinload(Disciplina.horarios),
+                selectinload(Disciplina.aulas),
+                selectinload(Disciplina.reposicoes)   # <-- ADICIONADO
+            )
+        ).one()
 
-        # separar dias sem aula
+        # Aulas normais
+        aulas = sorted(disciplina.aulas, key=lambda a: a.data)
         dias_sem_aula = [a for a in aulas if a.sem_aula]
         aulas_normais = [a for a in aulas if not a.sem_aula]
 
-        # cálculo de créditos
-        creditos = disciplina.carga_horaria_semanal  # você precisa ter esse campo
+        # Reposições
+        reposicoes = sorted(disciplina.reposicoes, key=lambda r: r.data)
+
+        # Cálculo de aulas previstas
+        creditos = disciplina.carga_horaria_semanal
         aulas_previstas = (creditos * 16) // 2
 
-        # aulas disponíveis no semestre
-        aulas_disponiveis = len(aulas) - len(dias_sem_aula)
+        # Aulas disponíveis = aulas normais + reposições
+        aulas_disponiveis = len(aulas_normais) + len(reposicoes)
 
-        # aulas dadas
-        aulas_dadas = len([a for a in aulas_normais if a.atividades.strip() != ""])
+        # Aulas dadas
+        aulas_dadas = (
+            len([a for a in aulas_normais if a.atividades.strip() != ""])
+            + len([r for r in reposicoes if r.atividades.strip() != ""])
+        )
 
-        # faltas
-        faltas = len([a for a in aulas_normais if a.presenca == "F"])
+        # Faltas
+        faltas = (
+            len([a for a in aulas_normais if a.presenca == "F"])
+            + len([r for r in reposicoes if r.presenca == "F"])
+        )
 
     return templates.TemplateResponse(
         "dashboard_disciplina.html",
@@ -177,6 +212,7 @@ def dashboard_disciplina(request: Request, disciplina_id: int):
             "disciplina": disciplina,
             "aulas": aulas,
             "aulas_normais": aulas_normais,
+            "reposicoes": reposicoes,   # <-- ADICIONADO
             "dias_sem_aula_qtd": len(dias_sem_aula),
             "aulas_previstas": aulas_previstas,
             "aulas_disponiveis": aulas_disponiveis,
@@ -184,3 +220,86 @@ def dashboard_disciplina(request: Request, disciplina_id: int):
             "faltas": faltas,
         }
     )
+
+# @router.get("/disciplinas/{disciplina_id}/dashboard", name="disciplinas/{disciplina_id}/dashboard")
+# def dashboard_disciplina(request: Request, disciplina_id: int, usuario = Depends(get_current_user)):
+#     with get_session() as session:
+#         disciplina = session.get(Disciplina, disciplina_id)
+
+#         aulas = session.exec(
+#             select(Aula).where(Aula.disciplina_id == disciplina_id).order_by(Aula.data)
+#         ).all()
+
+#         # separar dias sem aula
+#         dias_sem_aula = [a for a in aulas if a.sem_aula]
+#         aulas_normais = [a for a in aulas if not a.sem_aula]
+
+#         # cálculo de créditos
+#         creditos = disciplina.carga_horaria_semanal  # você precisa ter esse campo
+#         aulas_previstas = (creditos * 16) // 2
+
+#         # aulas disponíveis no semestre
+#         aulas_disponiveis = len(aulas) - len(dias_sem_aula)
+
+#         # aulas dadas
+#         aulas_dadas = len([a for a in aulas_normais if a.atividades.strip() != ""])
+
+#         # faltas
+#         faltas = len([a for a in aulas_normais if a.presenca == "F"])
+
+#     return templates.TemplateResponse(
+#         "dashboard_disciplina.html",
+#         {
+#             "request": request,
+#             "disciplina": disciplina,
+#             "aulas": aulas,
+#             "aulas_normais": aulas_normais,
+#             "dias_sem_aula_qtd": len(dias_sem_aula),
+#             "aulas_previstas": aulas_previstas,
+#             "aulas_disponiveis": aulas_disponiveis,
+#             "aulas_dadas": aulas_dadas,
+#             "faltas": faltas,
+#             "usuario": usuario
+#         }
+#     )
+
+# @router.get("/disciplinas/{disciplina_id}/view", name="disciplinas/{disciplina_id}/view")
+# def dashboard_disciplina(request: Request, disciplina_id: int):
+#     with get_session() as session:
+#         disciplina = session.get(Disciplina, disciplina_id)
+
+#         aulas = session.exec(
+#             select(Aula).where(Aula.disciplina_id == disciplina_id).order_by(Aula.data)
+#         ).all()
+
+#         # separar dias sem aula
+#         dias_sem_aula = [a for a in aulas if a.sem_aula]
+#         aulas_normais = [a for a in aulas if not a.sem_aula]
+
+#         # cálculo de créditos
+#         creditos = disciplina.carga_horaria_semanal  # você precisa ter esse campo
+#         aulas_previstas = (creditos * 16) // 2
+
+#         # aulas disponíveis no semestre
+#         aulas_disponiveis = len(aulas) - len(dias_sem_aula)
+
+#         # aulas dadas
+#         aulas_dadas = len([a for a in aulas_normais if a.atividades.strip() != ""])
+
+#         # faltas
+#         faltas = len([a for a in aulas_normais if a.presenca == "F"])
+
+#     return templates.TemplateResponse(
+#         "dashboard_disciplina.html",
+#         {
+#             "request": request,
+#             "disciplina": disciplina,
+#             "aulas": aulas,
+#             "aulas_normais": aulas_normais,
+#             "dias_sem_aula_qtd": len(dias_sem_aula),
+#             "aulas_previstas": aulas_previstas,
+#             "aulas_disponiveis": aulas_disponiveis,
+#             "aulas_dadas": aulas_dadas,
+#             "faltas": faltas,
+#         }
+#     )
