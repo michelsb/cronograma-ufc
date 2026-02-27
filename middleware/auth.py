@@ -9,34 +9,29 @@ class AuthRedirectMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.root_path = root_path.rstrip("/")
 
-        # Rotas públicas EXATAS
+        # Rotas públicas SEM prefixo (pois o NGINX remove)
         self.public_exact = {
-            f"{self.root_path}/login",
-            f"{self.root_path}/logout",
-            f"{self.root_path}/api/login",
+            "/login",
+            "/logout",
+            "/api/login",
         }
 
-        # Rotas públicas por PADRÃO (prefixo)
         self.public_prefix = [
-            f"{self.root_path}/static",
+            "/static",
         ]
 
-        # Rotas públicas com PADRÃO DINÂMICO
         # /disciplinas/{id}/view
         self.public_dynamic = [
-            f"{self.root_path}/disciplinas/",
+            "/disciplinas/",
         ]
 
     def is_public(self, path: str) -> bool:
-        # 1. Match exato
         if path in self.public_exact:
             return True
 
-        # 2. Prefixos públicos
         if any(path.startswith(prefix) for prefix in self.public_prefix):
             return True
 
-        # 3. Rota dinâmica: /disciplinas/{id}/view
         for base in self.public_dynamic:
             if path.startswith(base) and path.endswith("/view"):
                 return True
@@ -44,15 +39,16 @@ class AuthRedirectMiddleware(BaseHTTPMiddleware):
         return False
 
     async def dispatch(self, request: Request, call_next):
+        # path SEM prefixo (pois o NGINX remove)
         path = request.url.path
 
         if self.is_public(path):
             return await call_next(request)
 
-        # Protegido → precisa de usuário
         try:
             request.state.usuario = get_current_user(request)
         except:
+            # Redirect COM prefixo (pois o navegador precisa dele)
             return RedirectResponse(f"{self.root_path}/login")
 
         return await call_next(request)
