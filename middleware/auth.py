@@ -14,6 +14,7 @@ class AuthRedirectMiddleware(BaseHTTPMiddleware):
             "/login",
             "/logout",
             "/api/login",
+            "/health",  
         }
 
         self.public_prefix = [
