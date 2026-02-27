@@ -173,7 +173,7 @@ def dashboard_disciplina(request: Request, disciplina_id: int):
             .where(Disciplina.id == disciplina_id)
             .options(
                 selectinload(Disciplina.horarios),
-                selectinload(Disciplina.aulas),
+                selectinload(Disciplina.aulas).selectinload(Aula.disciplina),  # <-- FALTAVA
                 selectinload(Disciplina.reposicoes)   # <-- ADICIONADO
             )
         ).one()
